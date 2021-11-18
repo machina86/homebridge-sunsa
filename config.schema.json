@@ -1,0 +1,20 @@
+{
+  "pluginAlias": "Sunsa",
+  "pluginType": "platform",
+  "singular": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "apiKey": {
+        "title": "API Key",
+        "type": "string",
+        "required": true
+      },
+      "idUser": {
+        "title": "User ID",
+        "type": "integer",
+        "required": true
+      }
+    }
+  }
+}
