@@ -7,11 +7,13 @@
     "properties": {
       "apiKey": {
         "title": "API Key",
+        "description": "Get API Key from sunsa app Settings->API Settings",
         "type": "string",
         "required": true
       },
       "idUser": {
         "title": "User ID",
+        "description": "Contact contact@sunshomes.com to retrieve your idUser",
         "type": "integer",
         "required": true
       }
