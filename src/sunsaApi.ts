@@ -12,30 +12,55 @@ export class SunsaApi {
 
   async getDevices() {
     const endpoint = `${this.baseUrl}/${this.idUser}/devices?publicApiKey=${this.apiKey}`;
-    try {
-      const response = await axios.get(endpoint);
-      return response.data;
-    } catch (error) {
-      return {
-        endpoint: endpoint,
-        error: error,
-      };
-    }
+    const response = await axios.get(endpoint)
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        return this.axiosError(endpoint, error);
+      });
+
+    return response;
   }
 
   async setPosition(value, idDevice) {
     const endpoint = `${this.baseUrl}/${this.idUser}/devices/${idDevice}?publicApiKey=${this.apiKey}`;
-    try {
-      const response = await axios.put(endpoint, {
-        Position: value,
+    const response = await axios.put(endpoint, {
+      Position: value,
+    })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => {
+        return this.axiosError(endpoint, error);
       });
-      return response.data;
-    } catch (error) {
-      return {
-        value: value,
-        endpoint: endpoint,
-        error: error,
-      };
+
+    return response;
+  }
+
+  axiosError(endpoint, error) {
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          return 'Sunsa API Error: Unauthorized';
+        case 404:
+          return `Sunsa API Error: Endpoint not found - ${endpoint}`;
+        default:
+          if (error.response.status >= 500) {
+            return 'Sunsa API Error: Response timeout';
+          } else {
+            return `Sunsa API Error: HTTP Status ${error.response.status}`;
+          }
+      }
+    } else if (error.request) {
+      switch (error.code) {
+        case 'EAI_AGAIN':
+          return 'Sunsa API Error: DNS lookup timeout';
+        default:
+          return `Sunsa API Error: Request error ${error.message}`;
+      }
+    } else {
+      return `Sunsa API Error: ${error.message}`;
     }
   }
 }
