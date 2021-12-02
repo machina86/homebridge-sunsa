@@ -20,6 +20,18 @@ You will need to enable the API key in your Sunsa app by going to Settings->API 
 
 You will currently need to contact contact@sunshomes.com to retrieve your idUser to use in this plugin.
 
+You can use the settings button in the plugins tab of homebridge to enter this information or use the following for a manual entry in the config.json.
+
+```
+"platforms": [
+    {
+        "apiKey": "Your API Key",
+        "idUser": 0,
+        "platform": "Sunsa"
+    }
+]
+```
+
 ## Using the plugin
 
 Currently this plugin only allows you to close your blinds in one direction. This direction can be set under "Default Smart Home Direction" in your Sunsa app under each device that you have.
