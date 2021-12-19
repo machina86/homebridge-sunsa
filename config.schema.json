@@ -13,7 +13,7 @@
       },
       "idUser": {
         "title": "User ID",
-        "description": "Contact contact@sunshomes.com to retrieve your idUser",
+        "description": "Contact contact@sunsahomes.com to retrieve your idUser",
         "type": "integer",
         "required": true
       }

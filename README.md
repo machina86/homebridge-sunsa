@@ -18,7 +18,7 @@ You will need two pieces of information for the config settings of this plugin. 
 
 You will need to enable the API key in your Sunsa app by going to Settings->API Settings and setting the Active toggle to on.
 
-You will currently need to contact contact@sunshomes.com to retrieve your idUser to use in this plugin.
+You will currently need to contact contact@sunsahomes.com to retrieve your idUser to use in this plugin.
 
 You can use the settings button in the plugins tab of homebridge to enter this information or use the following for a manual entry in the config.json.
 
