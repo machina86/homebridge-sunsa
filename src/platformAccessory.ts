@@ -82,18 +82,18 @@ export class SunsaPlatformAccessory {
     // we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
     this.batteryService.setCharacteristic(this.platform.Characteristic.Name, this.accessory.context.device.name);
 
+    this.statusLowBattery = 0;
+    this.batteryLevel = parseInt(this.accessory.context.device.batteryPercentage);
+    if (this.batteryLevel <= 10) {
+      this.statusLowBattery = 1;
+    }
+
     // create handlers for required characteristics
     this.batteryService.getCharacteristic(this.platform.Characteristic.StatusLowBattery)
       .onGet(this.handleStatusLowBatteryGet.bind(this));
 
     this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel)
       .onGet(this.handleBatteryLevelGet.bind(this));
-
-    this.statusLowBattery = 0;
-    this.batteryLevel = parseInt(this.accessory.context.device.batteryPercentage);
-    if (this.batteryLevel <= 10) {
-      this.statusLowBattery = 1;
-    }
 
     //Poll the device
     setInterval(() => {
