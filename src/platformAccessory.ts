@@ -129,13 +129,17 @@ export class SunsaPlatformAccessory {
                 this.positionState = 2;
               }
 
-              //check battery status
+              //get battery level and status
               this.batteryLevel = parseInt(device.batteryPercentage);
-              this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel).updateValue(this.batteryLevel);
               if (this.batteryLevel <= 10) {
                 this.statusLowBattery = 1;
-                this.batteryService.getCharacteristic(this.platform.Characteristic.StatusLowBattery).updateValue(this.statusLowBattery);
+              } else {
+                this.statusLowBattery = 0;
               }
+
+              //Set battery level and low battery status
+              this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel).updateValue(this.batteryLevel);
+              this.batteryService.getCharacteristic(this.platform.Characteristic.StatusLowBattery).updateValue(this.statusLowBattery);
 
               //set current position and position state
               this.windowCoveringService.getCharacteristic(this.platform.Characteristic.TargetPosition).updateValue(this.currentPosition);

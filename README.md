@@ -8,6 +8,8 @@
 
 # Homebridge Sunsa
 
+[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
+
 `homebridge-sunsa` is a [Homebridge](https://homebridge.io) plugin that makes Sunsa Wands available to [Apple's](https://www.apple.com) [HomeKit](https://www.apple.com/ios/home) smart home platform.
 
 This plugin will allow you to open/close your blinds and view the battery status in homekit.
@@ -18,7 +20,7 @@ You will need two pieces of information for the config settings of this plugin. 
 
 You will need to enable the API key in your Sunsa app by going to Settings->API Settings and setting the Active toggle to on.
 
-You will currently need to contact contact@sunsahomes.com to retrieve your idUser to use in this plugin.
+You will need to use your User ID from Settings->API Settings as the idUser to use in this plugin.
 
 You can use the settings button in the plugins tab of homebridge to enter this information or use the following for a manual entry in the config.json.
 
