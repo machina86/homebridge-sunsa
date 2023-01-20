@@ -159,7 +159,7 @@ export class SunsaPlatformAccessory {
               //get current temp
               this.currentTemp = parseFloat(device.temperature.value);
               if (device.temperature.unit === 'F') {
-                this.currentTemp = ((device.temperature.value - 32) * (5 / 9))
+                this.currentTemp = ((device.temperature.value - 32) * (5 / 9));
               }
 
               //Set battery level and low battery status
