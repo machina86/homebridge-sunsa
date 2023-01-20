@@ -11,6 +11,7 @@ import { SunsaApi } from './sunsaApi';
 export class SunsaPlatformAccessory {
   private windowCoveringService: Service;
   private batteryService: Service;
+  private temperatureSensorService: Service;
   private positionState: number;
   private currentPosition: number;
   private currentTiltAngle: number;
@@ -18,11 +19,13 @@ export class SunsaPlatformAccessory {
   private lastPosition: number;
   private statusLowBattery: number;
   private batteryLevel: number;
+  private currentTemp: number;
 
   constructor(
     private readonly platform: SunsaPlatform,
     private readonly accessory: PlatformAccessory,
     private readonly sunsaApi: SunsaApi,
+    private readonly polling: number,
   ) {
 
     // set accessory information
@@ -74,7 +77,7 @@ export class SunsaPlatformAccessory {
         minStep: 10,
       });
 
-    // get the windowcovering service if it exists, otherwise create a new windowcovering service
+    // get the battery service if it exists, otherwise create a new battery service
     this.batteryService = this.accessory.getService(this.platform.Service.Battery) ||
       this.accessory.addService(this.platform.Service.Battery);
 
@@ -94,6 +97,22 @@ export class SunsaPlatformAccessory {
 
     this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel)
       .onGet(this.handleBatteryLevelGet.bind(this));
+
+    // get the battery service if it exists, otherwise create a new battery service
+    this.temperatureSensorService = this.accessory.getService(this.platform.Service.TemperatureSensor) ||
+    this.accessory.addService(this.platform.Service.TemperatureSensor);
+
+    // set the service name, this is what is displayed as the default name on the Home app
+    // we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
+    this.temperatureSensorService.setCharacteristic(this.platform.Characteristic.Name, this.accessory.context.device.name);
+
+    this.currentTemp = parseInt(this.accessory.context.device.temperature.value);
+    if (this.accessory.context.device.temperature.unit === 'F') {
+      this.currentTemp = ((this.accessory.context.device.temperature.value - 32) * (5 / 9));
+    }
+
+    this.temperatureSensorService.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
+      .onGet(this.handleCurrentTemperatureGet.bind(this));
 
     //Poll the device
     setInterval(() => {
@@ -137,6 +156,12 @@ export class SunsaPlatformAccessory {
                 this.statusLowBattery = 0;
               }
 
+              //get current temp
+              this.currentTemp = parseFloat(device.temperature.value);
+              if (device.temperature.unit === 'F') {
+                this.currentTemp = ((device.temperature.value - 32) * (5 / 9))
+              }
+
               //Set battery level and low battery status
               this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel).updateValue(this.batteryLevel);
               this.batteryService.getCharacteristic(this.platform.Characteristic.StatusLowBattery).updateValue(this.statusLowBattery);
@@ -145,13 +170,17 @@ export class SunsaPlatformAccessory {
               this.windowCoveringService.getCharacteristic(this.platform.Characteristic.TargetPosition).updateValue(this.currentPosition);
               this.windowCoveringService.getCharacteristic(this.platform.Characteristic.PositionState).updateValue(this.positionState);
               this.accessory.context.device = device;
+
+              //Set current temperature
+              this.temperatureSensorService.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
+                .updateValue(this.currentTemp);
             }
           });
         } else {
           this.platform.log.info(response);
         }
       });
-    }, 10000);
+    }, this.polling);
   }
 
   /**
@@ -264,6 +293,15 @@ export class SunsaPlatformAccessory {
 
     // set this to a valid value for TargetPosition
     const currentValue = this.batteryLevel;
+
+    return currentValue;
+  }
+
+  handleCurrentTemperatureGet() {
+    this.platform.log.debug('Triggered GET CurrentTemperature');
+
+    // set this to a valid value for TargetPosition
+    const currentValue = this.currentTemp;
 
     return currentValue;
   }

@@ -20,7 +20,7 @@ You will need two pieces of information for the config settings of this plugin. 
 
 You will need to enable the API key in your Sunsa app by going to Settings->API Settings and setting the Active toggle to on.
 
-You will need to use your User ID from your Sunsa app by going to Settings->API Settings and compying the idUser to use in this plugin.
+You will need to use your User ID from your Sunsa app by going to Settings->API Settings and copying the idUser to use in this plugin.
 
 You can use the settings button in the plugins tab of homebridge to enter this information or use the following for a manual entry in the config.json.
 

@@ -13,8 +13,15 @@
       },
       "idUser": {
         "title": "User ID",
-        "description": "Contact contact@sunsahomes.com to retrieve your idUser",
+        "description": "Get idUser from sunsa app Settings->API Settings",
         "type": "integer",
+        "required": true
+      },
+      "polling": {
+        "title": "Polling",
+        "description": "Set polling time for wands in seconds. (default: 10)",
+        "type": "integer",
+        "default": 10,
         "required": true
       }
     }
