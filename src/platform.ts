@@ -54,6 +54,7 @@ export class SunsaPlatform implements DynamicPlatformPlugin {
     //GET DEVICES REGISTERED TO PROVIDED CONFIGURATION
     const sunsaApi = new SunsaApi(this.config.apiKey, this.config.idUser);
     const polling = this.config.polling !== undefined ? this.config.polling * 1000 : 10000;
+    const showTemp = this.config.showTemp !== undefined ? this.config.showTemp : true;
     sunsaApi.getDevices().then((response) => {
       if (response.devices) {
         response.devices.forEach((device) => {
@@ -78,7 +79,7 @@ export class SunsaPlatform implements DynamicPlatformPlugin {
 
             // create the accessory handler for the restored accessory
             // this is imported from `platformAccessory.ts`
-            new SunsaPlatformAccessory(this, existingAccessory, sunsaApi, polling);
+            new SunsaPlatformAccessory(this, existingAccessory, sunsaApi, polling, showTemp);
 
             // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
             // remove platform accessories when no longer present
@@ -99,7 +100,7 @@ export class SunsaPlatform implements DynamicPlatformPlugin {
 
             // create the accessory handler for the newly create accessory
             // this is imported from `platformAccessory.ts`
-            new SunsaPlatformAccessory(this, accessory, sunsaApi, polling);
+            new SunsaPlatformAccessory(this, accessory, sunsaApi, polling, showTemp);
 
             // link the accessory to your platform
             this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);

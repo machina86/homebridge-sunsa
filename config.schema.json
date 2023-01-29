@@ -17,12 +17,19 @@
         "type": "integer",
         "required": true
       },
+      "showTemp": {
+        "title": "Show Temperature Sensors",
+        "description": "Expose temperature sensors. (default: true)",
+        "type": "boolean",
+        "default": true,
+        "required": false
+      },
       "polling": {
         "title": "Polling",
         "description": "Set polling time for wands in seconds. (default: 10)",
         "type": "integer",
         "default": 10,
-        "required": true
+        "required": false
       }
     }
   }

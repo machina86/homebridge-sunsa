@@ -11,7 +11,7 @@ import { SunsaApi } from './sunsaApi';
 export class SunsaPlatformAccessory {
   private windowCoveringService: Service;
   private batteryService: Service;
-  private temperatureSensorService: Service;
+  private temperatureSensorService?: Service;
   private positionState: number;
   private currentPosition: number;
   private currentTiltAngle: number;
@@ -26,8 +26,8 @@ export class SunsaPlatformAccessory {
     private readonly accessory: PlatformAccessory,
     private readonly sunsaApi: SunsaApi,
     private readonly polling: number,
+    private readonly showTemp: boolean,
   ) {
-
     // set accessory information
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
       .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Sunsa')
@@ -98,21 +98,29 @@ export class SunsaPlatformAccessory {
     this.batteryService.getCharacteristic(this.platform.Characteristic.BatteryLevel)
       .onGet(this.handleBatteryLevelGet.bind(this));
 
-    // get the battery service if it exists, otherwise create a new battery service
-    this.temperatureSensorService = this.accessory.getService(this.platform.Service.TemperatureSensor) ||
-    this.accessory.addService(this.platform.Service.TemperatureSensor);
+    if (this.showTemp) {
+      // get the battery service if it exists, otherwise create a new battery service
+      this.temperatureSensorService = this.accessory.getService(this.platform.Service.TemperatureSensor) ||
+      this.accessory.addService(this.platform.Service.TemperatureSensor);
 
-    // set the service name, this is what is displayed as the default name on the Home app
-    // we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
-    this.temperatureSensorService.setCharacteristic(this.platform.Characteristic.Name, this.accessory.context.device.name);
+      // set the service name, this is what is displayed as the default name on the Home app
+      // we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
+      this.temperatureSensorService.setCharacteristic(this.platform.Characteristic.Name, this.accessory.context.device.name);
 
-    this.currentTemp = parseInt(this.accessory.context.device.temperature.value);
-    if (this.accessory.context.device.temperature.unit === 'F') {
-      this.currentTemp = ((this.accessory.context.device.temperature.value - 32) * (5 / 9));
+      this.currentTemp = parseInt(this.accessory.context.device.temperature.value);
+      if (this.accessory.context.device.temperature.unit === 'F') {
+        this.currentTemp = ((this.accessory.context.device.temperature.value - 32) * (5 / 9));
+      }
+
+      this.temperatureSensorService.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
+        .onGet(this.handleCurrentTemperatureGet.bind(this));
+    } else {
+      this.currentTemp = 0;
+      const temperatureService = this.accessory.getService(this.platform.Service.TemperatureSensor);
+      if (temperatureService) {
+        this.accessory.removeService(temperatureService);
+      }
     }
-
-    this.temperatureSensorService.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
-      .onGet(this.handleCurrentTemperatureGet.bind(this));
 
     //Poll the device
     setInterval(() => {
@@ -156,10 +164,18 @@ export class SunsaPlatformAccessory {
                 this.statusLowBattery = 0;
               }
 
-              //get current temp
-              this.currentTemp = parseFloat(device.temperature.value);
-              if (device.temperature.unit === 'F') {
-                this.currentTemp = ((device.temperature.value - 32) * (5 / 9));
+              if (this.showTemp) {
+                //get current temp
+                this.currentTemp = parseFloat(device.temperature.value);
+                if (device.temperature.unit === 'F') {
+                  this.currentTemp = ((device.temperature.value - 32) * (5 / 9));
+                }
+
+                //Set current temperature
+                this.temperatureSensorService?.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
+                  .updateValue(this.currentTemp);
+              } else {
+                this.currentTemp = 0;
               }
 
               //Set battery level and low battery status
@@ -170,10 +186,6 @@ export class SunsaPlatformAccessory {
               this.windowCoveringService.getCharacteristic(this.platform.Characteristic.TargetPosition).updateValue(this.currentPosition);
               this.windowCoveringService.getCharacteristic(this.platform.Characteristic.PositionState).updateValue(this.positionState);
               this.accessory.context.device = device;
-
-              //Set current temperature
-              this.temperatureSensorService.getCharacteristic(this.platform.Characteristic.CurrentTemperature)
-                .updateValue(this.currentTemp);
             }
           });
         } else {

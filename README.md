@@ -24,11 +24,17 @@ You will need to use your User ID from your Sunsa app by going to Settings->API 
 
 You can use the settings button in the plugins tab of homebridge to enter this information or use the following for a manual entry in the config.json.
 
+The number for "polling" in the config is for how many seconds you want to wait between getting the status of your devices from the sunsa api. Default is every 10 seconds.
+
+Use true for "showTemp" in order to show the temperature sensors in homekit. Use false to hide. You will need to hide the temperature sensors if you want to group together blinds. Otherwise you will need to use scenes to control groups of blinds.
+
 ```
 "platforms": [
     {
         "apiKey": "Your API Key",
         "idUser": 0,
+        "showTemp": true,
+        "polling": 20,
         "platform": "Sunsa"
     }
 ]
