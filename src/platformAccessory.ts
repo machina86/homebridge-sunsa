@@ -1,7 +1,7 @@
 import { Service, PlatformAccessory } from 'homebridge';
 
-import { SunsaPlatform } from './platform';
-import { SunsaApi } from './sunsaApi';
+import { SunsaPlatform } from './platform.js';
+import { SunsaApi } from './sunsaApi.js';
 
 /**
  * Platform Accessory

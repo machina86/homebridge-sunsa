@@ -41,23 +41,23 @@ export class SunsaApi {
   axiosError(endpoint, error) {
     if (error.response) {
       switch (error.response.status) {
-        case 401:
-          return 'Sunsa API Error: Unauthorized';
-        case 404:
-          return `Sunsa API Error: Endpoint not found - ${endpoint}`;
-        default:
-          if (error.response.status >= 500) {
-            return 'Sunsa API Error: Response timeout';
-          } else {
-            return `Sunsa API Error: HTTP Status ${error.response.status}`;
-          }
+      case 401:
+        return 'Sunsa API Error: Unauthorized';
+      case 404:
+        return `Sunsa API Error: Endpoint not found - ${endpoint}`;
+      default:
+        if (error.response.status >= 500) {
+          return 'Sunsa API Error: Response timeout';
+        } else {
+          return `Sunsa API Error: HTTP Status ${error.response.status}`;
+        }
       }
     } else if (error.request) {
       switch (error.code) {
-        case 'EAI_AGAIN':
-          return 'Sunsa API Error: DNS lookup timeout';
-        default:
-          return `Sunsa API Error: Request error ${error.message}`;
+      case 'EAI_AGAIN':
+        return 'Sunsa API Error: DNS lookup timeout';
+      default:
+        return `Sunsa API Error: Request error ${error.message}`;
       }
     } else {
       return `Sunsa API Error: ${error.message}`;

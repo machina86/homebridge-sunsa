@@ -1,8 +1,8 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
+import type { API, Characteristic, DynamicPlatformPlugin, Logging, PlatformAccessory, PlatformConfig, Service } from 'homebridge';
 
-import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { SunsaPlatformAccessory } from './platformAccessory';
-import { SunsaApi } from './sunsaApi';
+import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
+import { SunsaPlatformAccessory } from './platformAccessory.js';
+import { SunsaApi } from './sunsaApi.js';
 
 /**
  * HomebridgePlatform
@@ -10,17 +10,19 @@ import { SunsaApi } from './sunsaApi';
  * parse the user config and discover/register accessories with Homebridge.
  */
 export class SunsaPlatform implements DynamicPlatformPlugin {
-  public readonly Service: typeof Service = this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  public readonly Service: typeof Service;
+  public readonly Characteristic: typeof Characteristic;
 
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
 
   constructor(
-    public readonly log: Logger,
+    public readonly log: Logging,
     public readonly config: PlatformConfig,
     public readonly api: API,
   ) {
+    this.Service = api.hap.Service;
+    this.Characteristic = api.hap.Characteristic;
     this.log.debug('Finished initializing platform:', this.config.name);
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
