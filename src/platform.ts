@@ -83,12 +83,13 @@ export class SunsaPlatform implements DynamicPlatformPlugin {
             // this is imported from `platformAccessory.ts`
             new SunsaPlatformAccessory(this, existingAccessory, sunsaApi, polling, showTemp);
 
+            // Automatically removing the devices became annoying during wiFi and power outages
             // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
             // remove platform accessories when no longer present
-            if (device.isConnected === false) {
-              this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
-              this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
-            }
+            // if (device.isConnected === false) {
+            //   this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
+            //   this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
+            // }
           } else {
             // the accessory does not yet exist, so we need to create it
             this.log.info('Adding new accessory:', device.name);

@@ -3,6 +3,7 @@ dist
 
 # ------------- Defaults ------------- #
 .DS_Store
+.codex
 
 # Logs
 logs

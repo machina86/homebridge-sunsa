@@ -2,7 +2,7 @@
   "displayName": "Homebridge Sunsa",
   "name": "homebridge-sunsa",
   "type": "module",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Sunsa platform plugin for homebridge",
   "license": "Apache-2.0",
   "repository": {
@@ -17,7 +17,7 @@
     "homebridge": "^1.8.0 || ^2.0.0-beta.0"
   },
   "main": "dist/index.js",
-  "scripts": {
+   "scripts": {
     "build": "rimraf ./dist && tsc",
     "lint": "eslint . --max-warnings=0",
     "prepublishOnly": "npm run lint && npm run build",
@@ -27,14 +27,14 @@
     "homebridge-plugin"
   ],
   "dependencies": {
-    "axios": "^1.13",
+    "axios": "^1.15",
     "homebridge-lib": "^7.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "@types/node": "^24.10.1",
     "eslint": "^9.39.1",
-    "homebridge": "^2.0.0-beta.64",
+    "homebridge": "^2.0.0-beta.55",
     "nodemon": "^3.1.11",
     "rimraf": "^6.1.0",
     "ts-node": "^10.9.2",
